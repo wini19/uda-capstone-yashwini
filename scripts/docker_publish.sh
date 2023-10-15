@@ -1,6 +1,6 @@
 # Create dockerpath
 # dockerpath=<your docker ID/path>
-dockerpath=wini19/capstone-yashwini
+dockerpath=wini19/capstone-yashwini2
 echo "Docker path set as: $dockerpath"
 
 # Authenticate & tag
