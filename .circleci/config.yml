@@ -85,6 +85,12 @@ jobs:
             - image: amazon/aws-cli:latest
         steps:
             - checkout
+            - run:
+                name: set-credential
+                command: |
+                    aws configure set aws_access_key_id $AWS_ACCESS_KEY
+                    aws configure set aws_secret_access_key $AWS_SECRET_KEY
+                    aws configure set region $AWS_REGION
             - kubernetes/install
             - run:
                 name: Update Kube config
