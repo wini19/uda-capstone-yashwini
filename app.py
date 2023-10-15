@@ -6,6 +6,6 @@ app = Flask(__name__)
 
 @app.route('/welcome')
 def index():
-    yreturn 'Welcome to Udacity! Yashwini! Second test !'
+    return 'Welcome! This is my capstone project! - Yashwini'
 
 app.run(host='0.0.0.0', port=80)
