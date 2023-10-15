@@ -7,7 +7,7 @@ if /.eksctl utils describe-stacks --region=${aws_region} | grep -q ${cluster_nam
     echo "Cluster already exists"
 else
     echo "Creating new cluster..."
-    /.eksctl create cluster --name ${cluster_name} --region=${aws_region} 
+    /.eksctl create cluster --name ${cluster_name} --region=${aws_region} --nodegroup-name cap-nodes --nodes 2
     echo "Cluster created"
     aws eks update-kubeconfig --region us-east-1 --name capstone
     echo "Node Details: "
