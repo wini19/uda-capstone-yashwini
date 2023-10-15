@@ -13,7 +13,7 @@ install_kubernetes_tools:
 	chmod +x /.eksctl
 	
 	# kubectl CLI
-	curl -LO "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
+	curl -LO -k "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
 	install -o root -g root -m 0755 kubectl /.kubectl
 	chmod +x /.kubectl
 
