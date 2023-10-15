@@ -85,42 +85,19 @@ jobs:
             - image: cimg/base:stable
         steps:
             - checkout
-            # - run:
-            #     name: "Install kubectl"
-            #     command: |
-            #         curl -LO -k "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
-            #         install -o root -g root -m 0755 kubectl /.kubectl
-            #         chmod +x /.kubectl
-            # - run:
-            #     name: Install dependencies
-            #     command: |
-            #         sudo apt-get update && sudo apt-get install -y
-            #         sudo apt-get install -y curl unzip
-            #         curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            #         unzip awscliv2.zip
-            #         sudo ./aws/install
-            - setup_remote_docker:
-                version: 20.10.14
-                docker_layer_caching: false
-            - aws-cli/setup:
-                aws-access-key-id: AWS_ACCESS_KEY
-                aws-secret-access-key: AWS_SECRET_KEY
-                aws-region: AWS_REGION
-            # - run:
-            #     name: set-credential
-            #     command: |
-            #         aws configure set aws_access_key_id $AWS_ACCESS_KEY
-            #         aws configure set aws_secret_access_key $AWS_SECRET_KEY
-            #         aws configure set region $AWS_REGION
-            - kubernetes/install-kubectl
-            - aws-eks/install-aws-iam-authenticator
-            - aws-eks/update-kubeconfig-with-authenticator:
-                cluster-name: capstone
-                aws-region: ${AWS_REGION}
-                install-kubectl: true
+            - kubernetes/install
+            - run:
+                name: Update Kube config
+                command: |
+                    aws eks update-kubeconfig --region us-east-1 --name capstone
+            - run:
+                name: Apply Deployment
+                 command: |
+                    kubectl apply -f config/deploy_service.yml
             - kubernetes/create-or-update-resource:
+                get-rollout-status: true
                 resource-file-path: config/deploy_service.yml
-                show-kubectl-command: true
+                resource-name: deployment/server
             - run:
                 name: Get details
                 command: bash scripts/cluster_details.sh
