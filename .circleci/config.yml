@@ -115,7 +115,7 @@ workflows:
             #             only: [main]
             # - create_cluster:
             #     requires: [build_publish_dockerimage]
-            - update_cluster:
+            - update_cluster
                 # requires: [create_cluster]    
             
             
