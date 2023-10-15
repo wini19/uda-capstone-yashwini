@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: capstone-yashwini
+  template:
+    metadata:
+      labels:
+        app: capstone-yashwini
+    spec:
+      containers:
+        - name: web
+          image: wini19/capstone-yashwini
+          ports:
+            - containerPort: 80
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: loadbalancer-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: capstone-yashwini
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80

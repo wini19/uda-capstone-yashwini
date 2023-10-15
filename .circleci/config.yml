@@ -2,7 +2,8 @@ version: 2.1
 
 orbs:
     aws-cli: circleci/aws-cli@3.1.5
-    #kubernetes: circleci/kubernetes@1.3
+    kubernetes: circleci/kubernetes@1.3
+    aws-eks: circleci/aws-eks@2.2.0
 
 jobs:
     install_lint:
@@ -57,4 +58,71 @@ jobs:
             - run:
                 name: "Upload docker image to docker hub"
                 command: bash scripts/docker_publish.sh $DOCKERHUB_PW
+    
+    #create EKS cluster if it does not exist
+    create_cluster:
+        docker:
+            - image: python:3.7.3-stretch
+        steps:
+            - checkout
+            - run:
+                name: "Install dependencies for kubernetes"
+                command: make install_kubernetes_tools
+            - aws-cli/setup:
+                aws-access-key-id: AWS_ACCESS_KEY
+                aws-secret-access-key: AWS_SECRET_KEY
+                aws-region: AWS_REGION
+            - run:
+                name: "Create EKS cluster"
+                command: bash scripts/create_cluster.sh
+            - run:
+                name: Update kubectl config 
+                command: |
+                    aws eks update-kubeconfig --region us-east-1 --name capstone
+    
+    update_cluster:
+        docker:
+            - image: 'cimg/base:stable'
+        steps:
+            - checkout
+            - run:
+                name: "Install dependencies for kubernetes"
+                command: make install_kubernetes_tools
+            - restore_cache:
+                keys:
+                    - v1-dependencies-{{ checksum "requirements.txt" }}
+                    - v1-dependencies-
+            - setup_remote_docker:
+                version: 20.10.14
+                docker_layer_caching: false
+            - aws-cli/setup:
+                aws-access-key-id: AWS_ACCESS_KEY
+                aws-secret-access-key: AWS_SECRET_KEY
+                aws-region: AWS_REGION
+            - kubernetes/install-kubectl
+            - aws-eks/update-kubeconfig-with-authenticator:
+                cluster-name: capstone
+                install-kubectl: true
+            - kubernetes/create-or-update-resource:
+                resource-file-path: config/deploy_service.yml
+                show-kubectl-command: true
+            - run:
+                name: Get details
+                command: bash scripts/cluster_details.sh
+                
+            
+    
+workflows:
+    default:
+        jobs:
+            - install_lint
+            - build_publish_dockerimage:
+                requires: [install_lint]
+                filters:
+                    branches:
+                        only: [main]
+            - create_cluster:
+                requires: [build_publish_dockerimage]
+            - update_cluster:
+                requires: []create_cluster]            
             
