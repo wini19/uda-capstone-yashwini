@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: web
-          image: wini19/capstone-yashwini2
+          image: wini19/capstone-yashwini3
           ports:
             - containerPort: 80
 
