@@ -98,14 +98,20 @@ jobs:
             - setup_remote_docker:
                 version: 20.10.14
                 docker_layer_caching: false
-            - aws-cli/setup:
-                aws-access-key-id: AWS_ACCESS_KEY
-                aws-secret-access-key: AWS_SECRET_KEY
-                aws-region: AWS_REGION
+            # - aws-cli/setup:
+            #     aws-access-key-id: AWS_ACCESS_KEY
+            #     aws-secret-access-key: AWS_SECRET_KEY
+            #     aws-region: AWS_REGION
+            - run:
+                name: set-credential
+                command: |
+                    aws configure set aws_access_key_id $AWS_ACCESS_KEY
+                    aws configure set aws_secret_access_key $AWS_SECRET_KEY
+                    aws configure set region $AWS_REGION
             - kubernetes/install-kubectl
             - aws-eks/update-kubeconfig-with-authenticator:
                 cluster-name: capstone
-                aws-region: ${AWS_REGION}
+                # aws-region: ${AWS_REGION}
                 install-kubectl: true
             - kubernetes/create-or-update-resource:
                 resource-file-path: config/deploy_service.yml
