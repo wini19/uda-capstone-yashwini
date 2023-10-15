@@ -91,7 +91,7 @@ jobs:
                     aws configure set aws_access_key_id $AWS_ACCESS_KEY
                     aws configure set aws_secret_access_key $AWS_SECRET_KEY
                     aws configure set region $AWS_REGION
-            - kubernetes/install
+            - kubernetes/install-kubectl
             - run:
                 name: Update Kube config
                 command: |
@@ -104,6 +104,7 @@ jobs:
                 get-rollout-status: true
                 resource-file-path: config/deploy_service.yml
                 resource-name: deployment/server
+                show-kubectl-command: true
             - run:
                 name: Get details
                 command: bash scripts/cluster_details.sh
@@ -113,15 +114,15 @@ jobs:
 workflows:
     default:
         jobs:
-            # - install_lint
-            # - build_publish_dockerimage:
-            #     requires: [install_lint]
-            #     filters:
-            #         branches:
-            #             only: [main]
-            # - create_cluster:
-            #     requires: [build_publish_dockerimage]
-            - update_cluster
-                # requires: [create_cluster]    
+            - install_lint
+            - build_publish_dockerimage:
+                requires: [install_lint]
+                filters:
+                    branches:
+                        only: [main]
+            - create_cluster:
+                requires: [build_publish_dockerimage]
+            - update_cluster:
+                requires: [create_cluster] 
             
             

@@ -2,12 +2,12 @@
 
 # Get Nodes details
 echo "Node details: "
-/.kubectl get nodes
+kubectl get nodes
 
 # Loadbalancer
 echo "Loadbalancer: "
-/.kubectl get service/loadbalancer-service
+kubectl get service/loadbalancer-service
 
 # Other details
 echo "Deploy, RS, SVC, Pod details: "
-/.kubectl get deploy,rs,svc,pods
+kubectl get deploy,rs,svc,pods
