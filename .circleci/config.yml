@@ -113,7 +113,7 @@ jobs:
             #         aws configure set aws_secret_access_key $AWS_SECRET_KEY
             #         aws configure set region $AWS_REGION
             - kubernetes/install-kubectl
-            - install-aws-iam-authenticator
+            - aws-eks/install-aws-iam-authenticator
             - aws-eks/update-kubeconfig-with-authenticator:
                 cluster-name: capstone
                 
