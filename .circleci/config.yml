@@ -89,8 +89,8 @@ jobs:
                 name: "Install kubectl"
                 command: |
                     curl -LO -k "https://dl.k8s.io/release/v1.23.6/bin/linux/amd64/kubectl"
-	                install -o root -g root -m 0755 kubectl /.kubectl
-	                chmod +x /.kubectl
+                    install -o root -g root -m 0755 kubectl /.kubectl
+                    chmod +x /.kubectl
             - restore_cache:
                 keys:
                     - v1-dependencies-{{ checksum "requirements.txt" }}
