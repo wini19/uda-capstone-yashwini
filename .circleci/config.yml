@@ -105,6 +105,7 @@ jobs:
             - kubernetes/install-kubectl
             - aws-eks/update-kubeconfig-with-authenticator:
                 cluster-name: capstone
+                aws-region: AWS_REGION
                 install-kubectl: true
             - kubernetes/create-or-update-resource:
                 resource-file-path: config/deploy_service.yml
