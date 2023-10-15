@@ -9,7 +9,7 @@ install:
 install_kubernetes_tools:
 	# eksctl CLI
 	curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_linux_amd64.tar.gz" | tar xz -C /tmp
-	cp /tmp/eksctl /.eksctl
+	mv /tmp/eksctl /.eksctl
 	chmod +x /.eksctl
 	
 	# kubectl CLI

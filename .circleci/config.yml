@@ -82,7 +82,7 @@ jobs:
     
     update_cluster:
         docker:
-            - image: 'cimg/base:stable'
+            - image: python:3.7.3-stretch
         steps:
             - checkout
             - run:
